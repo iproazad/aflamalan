@@ -1,0 +1,186 @@
+/* ===== أنماط عامة ===== */
+:root {
+    --primary-color: #e50914;
+    --secondary-color: #b81d24;
+    --background-dark: #141414;
+    --background-light: #f5f5f5;
+    --text-dark: #ffffff;
+    --text-light: #333333;
+    --card-dark: #1f1f1f;
+    --card-light: #ffffff;
+    --shadow-dark: rgba(0, 0, 0, 0.5);
+    --shadow-light: rgba(0, 0, 0, 0.1);
+    --transition-speed: 0.3s;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Cairo', sans-serif;
+}
+
+body {
+    background-color: var(--background-dark);
+    color: var(--text-dark);
+    transition: background-color var(--transition-speed), color var(--transition-speed);
+    direction: rtl;
+}
+
+/* ===== وضع النهار ===== */
+body.light-mode {
+    background-color: var(--background-light);
+    color: var(--text-light);
+}
+
+body.light-mode .sidebar {
+    background-color: #e1e1e1;
+}
+
+body.light-mode .movie-card {
+    background-color: var(--card-light);
+    box-shadow: 0 4px 8px var(--shadow-light);
+}
+
+/* ===== مؤشر التحميل ===== */
+.loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 300px;
+    text-align: center;
+}
+
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: var(--primary-color);
+    animation: spin 1s ease-in-out infinite;
+    margin-bottom: 20px;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+body.light-mode .loading-spinner {
+    border-color: rgba(0, 0, 0, 0.1);
+    border-top-color: var(--primary-color);
+}
+
+/* ===== رسائل الخطأ والتنبيهات ===== */
+.no-movies, .no-results {
+    width: 100%;
+    padding: 20px;
+    text-align: center;
+    font-size: 18px;
+    color: var(--text-dark);
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 8px;
+    margin: 20px 0;
+}
+
+body.light-mode .no-movies, body.light-mode .no-results {
+    color: var(--text-light);
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* ===== تحسينات لبطاقات الأفلام ===== */
+.movie-poster img {
+    transition: transform 0.3s ease;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.movie-card:hover .movie-poster img {
+    transform: scale(1.05);
+}
+
+/* ===== تحسينات لنافذة تفاصيل الفيلم ===== */
+.movie-details-modal {
+    background-color: rgba(0, 0, 0, 0.9);
+}
+
+body.light-mode .movie-details-modal {
+    background-color: rgba(255, 255, 255, 0.9);
+}
+
+.watch-btn, .download-btn {
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.watch-btn:hover, .download-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* ===== تحسينات للبحث ===== */
+.search-input {
+    transition: box-shadow 0.3s ease;
+}
+
+.search-input:focus {
+    box-shadow: 0 0 0 2px var(--primary-color);
+}
+
+/* ===== تحسينات للأزرار ===== */
+button {
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button:hover {
+    transform: translateY(-2px);
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+/* ===== تحسينات للفئات والتصفية ===== */
+.category-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.tag {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: var(--text-dark);
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.tag:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+.tag.active {
+    background-color: var(--primary-color);
+    color: white;
+    box-shadow: 0 2px 8px rgba(229, 9, 20, 0.5);
+}
+
+body.light-mode .tag {
+    background-color: rgba(0, 0, 0, 0.1);
+    color: var(--text-light);
+}
+
+body.light-mode .tag:hover {
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+body.light-mode .tag.active {
+    background-color: var(--primary-color);
+    color: white;
+}
