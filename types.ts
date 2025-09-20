@@ -10,6 +10,7 @@ export interface Movie {
   downloadUrl?: string;
   trailerUrl?: string;
   createdAt: any; // Firebase Timestamp
+  isKurdish?: boolean;
 }
 
 export interface Category {

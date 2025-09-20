@@ -4,12 +4,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import { db } from '../services/firebase';
 import type { Movie } from '../types';
 import HeroSlider from '../components/HeroSlider';
-import MoviesCarousel from '../components/MoviesCarousel';
 import YearFilter from '../components/YearFilter';
 import SearchBar from '../components/SearchBar';
 import GenreFilter from '../components/GenreFilter';
-import { useAuth } from '../contexts/AuthContext';
-import { useFavorites } from '../hooks/useFavorites';
 import MovieGrid from '../components/MovieGrid';
 import { useRatings } from '../contexts/RatingsContext';
 import SortFilter from '../components/SortFilter';
@@ -17,54 +14,7 @@ import LoadingSpinner from '../components/LoadingSpinner';
 
 const MOVIES_PER_PAGE = 18;
 
-const TestAdminModal: React.FC<{ isOpen: boolean; onClose: () => void; onSubmit: (uid: string, email: string) => void; }> = ({ isOpen, onClose, onSubmit }) => {
-    if (!isOpen) return null;
-
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        const formData = new FormData(e.currentTarget);
-        const uid = formData.get('uid') as string;
-        const email = formData.get('email') as string;
-        onSubmit(uid, email);
-    };
-
-    return (
-        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 animate-fade-in" onClick={onClose}>
-            <div className="bg-gray-800 p-8 rounded-lg shadow-xl w-full max-w-md" onClick={e => e.stopPropagation()}>
-                <h3 className="text-2xl font-bold mb-6 text-white">إضافة مشرف تجريبي</h3>
-                <form onSubmit={handleSubmit}>
-                    <div className="space-y-4">
-                        <input
-                            name="uid"
-                            type="text"
-                            required
-                            placeholder="معرّف المستخدم (UID)"
-                            className="w-full bg-gray-700 text-white p-3 rounded-md focus:ring-2 focus:ring-cyan-500 border-none outline-none"
-                        />
-                        <input
-                            name="email"
-                            type="email"
-                            required
-                            placeholder="البريد الإلكتروني"
-                            className="w-full bg-gray-700 text-white p-3 rounded-md focus:ring-2 focus:ring-cyan-500 border-none outline-none"
-                        />
-                    </div>
-                    <div className="flex justify-end gap-4 mt-8">
-                        <button type="button" onClick={onClose} className="bg-gray-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-gray-500 transition-colors">
-                            إلغاء
-                        </button>
-                        <button type="submit" className="bg-cyan-500 text-white font-bold py-2 px-6 rounded-lg hover:bg-cyan-600 transition-colors">
-                            إضافة
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    );
-};
-
-
-const HomePage: React.FC = () => {
+const KurdishPage: React.FC = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedYear, setSelectedYear] = useState<string>('all');
@@ -72,9 +22,6 @@ const HomePage: React.FC = () => {
   const [sortOrder, setSortOrder] = useState<string>('createdAt_desc');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [visibleCount, setVisibleCount] = useState(MOVIES_PER_PAGE);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const { currentUser } = useAuth();
-  const { favorites } = useFavorites();
   const { getAverageRating } = useRatings();
   const loadMoreRef = useRef(null);
 
@@ -82,22 +29,20 @@ const HomePage: React.FC = () => {
   useEffect(() => {
     const fetchMovies = async () => {
       try {
-        // Fetch all movies, then filter and sort on the client.
-        // This ensures movies without an 'isKurdish' field (assumed non-Kurdish) are included.
-        const moviesCollection = await db.collection('movies').get();
-        const allMovies = moviesCollection.docs.map(doc => ({ id: doc.id, ...doc.data() } as Movie));
-        
-        // Filter out movies explicitly marked as Kurdish.
-        const nonKurdishMovies = allMovies.filter(movie => movie.isKurdish !== true);
-        
+        // Fetch only Kurdish movies directly from Firestore, then sort client-side to avoid index error.
+        const moviesCollection = await db.collection('movies')
+            .where('isKurdish', '==', true)
+            .get();
+        let moviesData = moviesCollection.docs.map(doc => ({ id: doc.id, ...doc.data() } as Movie));
+
         // Sort movies by creation date to show the newest ones first
-        nonKurdishMovies.sort((a, b) => {
+        moviesData.sort((a, b) => {
             const dateA = a.createdAt?.toMillis ? a.createdAt.toMillis() : 0;
             const dateB = b.createdAt?.toMillis ? b.createdAt.toMillis() : 0;
             return dateB - dateA;
         });
 
-        setMovies(nonKurdishMovies);
+        setMovies(moviesData);
       } catch (error) {
         console.error("Error fetching movies: ", error);
       } finally {
@@ -126,7 +71,6 @@ const HomePage: React.FC = () => {
     setSelectedGenres([]);
   };
 
-  const favoriteMovies = movies.filter(movie => favorites.includes(movie.id));
   const availableYears = [...new Set(movies.map(movie => movie.year))].sort((a, b) => b - a);
   const availableGenres = [...new Set(movies.flatMap(movie => movie.genres || []))].sort();
 
@@ -172,7 +116,7 @@ const HomePage: React.FC = () => {
     const observer = new IntersectionObserver(
         entries => {
             if (entries[0].isIntersecting && hasMoreMovies) {
-                // A small delay can make the UX feel smoother
+                 // A small delay can make the UX feel smoother
                 setTimeout(() => {
                     setVisibleCount(prev => prev + MOVIES_PER_PAGE);
                 }, 300);
@@ -192,22 +136,6 @@ const HomePage: React.FC = () => {
         }
     };
   }, [loading, hasMoreMovies]);
-
-
-  const handleAddTestAdmin = async (uid: string, email: string) => {
-    if (uid.trim() === '' || email.trim() === '') {
-        window.alert("UID والبريد الإلكتروني لا يمكن أن يكونا فارغين.");
-        return;
-    }
-    try {
-        await db.collection('admins').doc(uid).set({ uid, email });
-        window.alert(`تمت إضافة المشرف ${email} بنجاح!`);
-        setIsModalOpen(false);
-    } catch (error) {
-        console.error("Error adding test admin:", error);
-        window.alert("فشل في إضافة المشرف. انظر إلى وحدة التحكم لمزيد من التفاصيل.");
-    }
-  };
 
 
   if (loading) {
@@ -242,13 +170,9 @@ const HomePage: React.FC = () => {
         </div>
       </div>
 
-      {currentUser && favoriteMovies.length > 0 && (
-        <MoviesCarousel title="المفضلة" movies={favoriteMovies} />
-      )}
-
       <section className="mb-12">
         <h2 className="text-xl sm:text-2xl font-bold text-white mb-6 border-r-4 border-cyan-400 pr-4">
-          {isFiltering ? 'نتائج البحث' : 'جميع الأفلام'}
+          {isFiltering ? 'نتائج البحث' : 'الأفلام المدبلجة للكردية'}
         </h2>
         {!loading && sortedAndFilteredMovies.length > 0 ? (
           <>
@@ -280,30 +204,12 @@ const HomePage: React.FC = () => {
           </>
         ) : !loading && (
           <div className="text-center p-8 bg-gray-800 rounded-lg mt-8">
-            <p className="text-xl text-gray-400">لا توجد أفلام تطابق معايير البحث.</p>
+            <p className="text-xl text-gray-400">لا توجد أفلام مدبلجة للكردية تطابق معايير البحث.</p>
           </div>
         )}
       </section>
-      
-      {/* Test Button */}
-      <div className="text-center my-12 p-6 bg-gray-800 border border-gray-700 rounded-lg">
-        <h3 className="text-xl font-bold mb-2">لأغراض الاختبار</h3>
-        <p className="text-gray-400 mb-4">استخدم هذا الزر لإضافة مشرف جديد بسرعة إلى قاعدة البيانات لاختبار الصلاحيات.</p>
-        <button
-            onClick={() => setIsModalOpen(true)}
-            className="bg-purple-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-purple-700 transition-colors"
-        >
-            إضافة مشرف تجريبي
-        </button>
-      </div>
-
-      <TestAdminModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onSubmit={handleAddTestAdmin}
-      />
     </div>
   );
 };
 
-export default HomePage;
+export default KurdishPage;

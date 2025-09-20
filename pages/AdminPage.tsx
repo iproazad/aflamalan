@@ -4,43 +4,68 @@ import ManageMovies from '../components/admin/ManageMovies';
 import ManageAdmins from '../components/admin/ManageAdmins';
 import ManageCategories from '../components/admin/ManageCategories';
 
-type AdminTab = 'movies' | 'categories' | 'admins';
+// Define the structure for a tab configuration
+interface TabConfig {
+  key: string;
+  label: string;
+  component: React.ReactElement;
+}
+
+// Array of tab configurations makes it easy to add/remove sections
+const adminTabs: TabConfig[] = [
+  { key: 'movies', label: 'إدارة الأفلام', component: <ManageMovies /> },
+  { key: 'categories', label: 'إدارة الفئات', component: <ManageCategories /> },
+  { key: 'admins', label: 'إدارة المشرفين', component: <ManageAdmins /> },
+];
+
+// A reusable tab component as requested
+const AdminTabButton: React.FC<{
+  label: string;
+  tabKey: string;
+  activeTab: string;
+  onClick: (tabKey: string) => void;
+}> = ({ label, tabKey, activeTab, onClick }) => (
+  <button
+    onClick={() => onClick(tabKey)}
+    className={`px-6 py-3 font-bold rounded-t-lg transition-colors duration-300 ${
+      activeTab === tabKey
+        ? 'bg-gray-800 text-cyan-400'
+        : 'bg-gray-700 text-white hover:bg-gray-600'
+    }`}
+    role="tab"
+    aria-selected={activeTab === tabKey}
+  >
+    {label}
+  </button>
+);
 
 const AdminPage: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<AdminTab>('movies');
+  // Initialize state with the key of the first tab
+  const [activeTab, setActiveTab] = useState<string>(adminTabs[0].key);
 
-  const renderContent = () => {
-    switch (activeTab) {
-      case 'movies':
-        return <ManageMovies />;
-      case 'categories':
-        return <ManageCategories />;
-       case 'admins':
-         return <ManageAdmins />;
-      default:
-        return <ManageMovies />;
-    }
-  };
-
-  const TabButton: React.FC<{tab: AdminTab; label: string}> = ({tab, label}) => (
-     <button
-        onClick={() => setActiveTab(tab)}
-        className={`px-6 py-3 font-bold rounded-t-lg transition-colors duration-300 ${activeTab === tab ? 'bg-gray-800 text-cyan-400' : 'bg-gray-700 text-white hover:bg-gray-600'}`}
-      >
-        {label}
-    </button>
-  )
+  // Find the component to render based on the active tab key
+  const activeComponent = adminTabs.find(tab => tab.key === activeTab)?.component;
 
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-4xl font-black text-white mb-8">لوحة تحكم المشرف</h1>
-      <div className="flex border-b border-gray-700 mb-6">
-        <TabButton tab="movies" label="إدارة الأفلام"/>
-        <TabButton tab="categories" label="إدارة الفئات"/>
-        <TabButton tab="admins" label="إدارة المشرفين"/>
+      
+      {/* Map over the configuration array to render tabs */}
+      <div className="flex border-b border-gray-700 mb-6" role="tablist">
+        {adminTabs.map(tab => (
+          <AdminTabButton
+            key={tab.key}
+            label={tab.label}
+            tabKey={tab.key}
+            activeTab={activeTab}
+            onClick={setActiveTab}
+          />
+        ))}
       </div>
-      <div>
-        {renderContent()}
+      
+      {/* Render the active component */}
+      <div role="tabpanel">
+        {activeComponent}
       </div>
     </div>
   );

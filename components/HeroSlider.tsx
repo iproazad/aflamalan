@@ -44,13 +44,13 @@ const HeroSlider: React.FC<HeroSliderProps> = ({ movies }) => {
         </div>
       ))}
 
-      <div className="relative z-10 h-full flex items-center p-8 md:p-16">
-        <div className="w-full md:w-1/2 lg:w-1/3">
-          <h2 className="text-4xl md:text-6xl font-black text-white leading-tight mb-4 animate-fade-in-down">{activeMovie.title}</h2>
-          <p className="text-gray-200 text-lg mb-6 line-clamp-3 animate-fade-in-up">{activeMovie.description}</p>
+      <div className="relative z-10 h-full flex items-center p-6 md:p-12 lg:p-16">
+        <div className="w-full md:w-2/3 lg:w-1/2">
+          <h2 className="text-2xl sm:text-4xl md:text-6xl font-black text-white leading-tight mb-4 animate-fade-in-down">{activeMovie.title}</h2>
+          <p className="text-gray-200 text-sm sm:text-base md:text-lg mb-6 line-clamp-3 animate-fade-in-up">{activeMovie.description}</p>
           <Link
             to={`/movie/${activeMovie.id}`}
-            className="inline-block bg-cyan-500 text-white font-bold text-xl px-8 py-3 rounded-lg hover:bg-cyan-600 transition-all duration-300 transform hover:scale-105 shadow-lg"
+            className="inline-block bg-cyan-500 text-white font-bold text-base px-4 py-2 md:text-xl md:px-8 md:py-3 rounded-lg hover:bg-cyan-600 transition-all duration-300 transform hover:scale-105 shadow-lg"
           >
             شاهد الآن
           </Link>

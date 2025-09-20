@@ -53,11 +53,11 @@ const MoviesCarousel: React.FC<MoviesCarouselProps> = ({ title, movies }) => {
         isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'
       }`}
     >
-      <h2 className="text-3xl font-bold text-white mb-6 border-r-4 border-cyan-400 pr-4">{title}</h2>
+      <h2 className="text-xl sm:text-2xl font-bold text-white mb-6 border-r-4 border-cyan-400 pr-4">{title}</h2>
       <div className="relative">
-        <div className="flex space-x-6 overflow-x-auto pb-4 -mx-4 px-4 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-900">
+        <div className="flex space-x-3 sm:space-x-4 md:space-x-6 overflow-x-auto pb-4 -mx-4 px-4 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-900">
           {movies.map(movie => (
-            <div key={movie.id} className="flex-shrink-0 w-48 md:w-56 lg:w-64">
+            <div key={movie.id} className="flex-shrink-0 w-40 sm:w-48 md:w-56 lg:w-64">
               <MovieCard movie={movie} />
             </div>
           ))}
