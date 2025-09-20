@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
   <head>
@@ -21,6 +20,8 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <!-- HLS.js for video streaming -->
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <!-- Babel Standalone for in-browser JSX/TSX transpilation -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <script type="importmap">
 {
   "imports": {
@@ -35,13 +36,12 @@
 </head>
   <body class="bg-gray-900 text-white">
     <div id="root"></div>
-    <script type="module" src="/index.tsx"></script>
+    <script type="text/babel" data-type="module" src="/index.tsx"></script>
     <!-- 
-      This is a React application. To deploy it, you need to build it into static files.
-      1. Make sure you have Node.js and npm installed.
-      2. In your project directory, run 'npm install'.
-      3. Then, run 'npm run build'.
-      4. A 'dist' folder will be created. Upload the contents of this 'dist' folder to your hosting provider (like Netlify).
+      This is a React application. It uses Babel Standalone for in-browser transpilation.
+      You can deploy the files directly to any static hosting provider (like Netlify).
+      No 'npm install' or 'npm run build' is needed.
     -->
-  </body>
+  <script type="module" src="/index.tsx"></script>
+</body>
 </html>
