@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
   <head>
@@ -18,6 +17,7 @@
               'zoom-in': 'zoomIn 0.3s ease-out forwards',
               'fade-in-up-fast': 'fadeInUp 0.2s ease-out forwards',
               'ken-burns': 'kenburns 8s ease-out forwards',
+              'background-pan': 'backgroundPan 15s ease-in-out infinite',
             },
             keyframes: {
               fadeIn: { '0%': { opacity: 0 }, '100%': { opacity: 1 } },
@@ -27,6 +27,11 @@
               kenburns: {
                 '0%': { transform: 'scale(1) translate(0, 0)', transformOrigin: 'center center' },
                 '100%': { transform: 'scale(1.1) translate(-2%, 2%)', transformOrigin: 'center center' },
+              },
+              backgroundPan: {
+                '0%': { backgroundPosition: '0% 50%' },
+                '50%': { backgroundPosition: '100% 50%' },
+                '100%': { backgroundPosition: '0% 50%' },
               }
             }
           }
@@ -39,21 +44,26 @@
     <style>
       body {
         font-family: 'Cairo', sans-serif;
+        color: #E6EDF3;
+        background: linear-gradient(-45deg, #0D1117, #161B22, #0D1117, #21262D);
+        background-size: 400% 400%;
+        animation: backgroundPan 15s ease-in-out infinite;
       }
       /* Custom Scrollbar */
       ::-webkit-scrollbar {
-        width: 8px;
-        height: 8px;
+        width: 6px;
+        height: 6px;
       }
       ::-webkit-scrollbar-track {
-        background: #111827; /* gray-900 */
+        background: #0D1117;
       }
       ::-webkit-scrollbar-thumb {
-        background: #374151; /* gray-700 */
+        background: #21262D;
         border-radius: 10px;
+        border: 1px solid #30363D;
       }
       ::-webkit-scrollbar-thumb:hover {
-        background: #4B5563; /* gray-600 */
+        background: #30363D;
       }
       /* Carousel Fading Edges */
       .carousel-container::before,
@@ -68,11 +78,11 @@
       }
       .carousel-container::before {
         left: 0;
-        background: linear-gradient(to right, #111827 20%, transparent);
+        background: linear-gradient(to right, #0D1117 20%, transparent);
       }
       .carousel-container::after {
         right: 0;
-        background: linear-gradient(to left, #111827 20%, transparent);
+        background: linear-gradient(to left, #0D1117 20%, transparent);
       }
     </style>
     <!-- Firebase SDKs -->
@@ -93,9 +103,9 @@
   }
 }
 </script>
-  <script type="module" crossorigin src="/assets/index-KyyGEGzg.js"></script>
+  <script type="module" crossorigin src="/assets/index-BE2UnwgW.js"></script>
 </head>
-  <body class="bg-gray-900 text-white">
+  <body>
     <div id="root"></div>
     <!-- 
       This is a React application. To deploy it, you need to build it into static files.
