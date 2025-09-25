@@ -17,12 +17,18 @@
               'zoom-in': 'zoomIn 0.3s ease-out forwards',
               'fade-in-up-fast': 'fadeInUp 0.2s ease-out forwards',
               'ken-burns': 'kenburns 8s ease-out forwards',
+              'fade-out': 'fadeOut 0.3s ease-in forwards',
+              'zoom-out': 'zoomOut 0.3s ease-in forwards',
+              'fade-out-up': 'fadeOutUp 0.3s ease-in forwards',
             },
             keyframes: {
               fadeIn: { '0%': { opacity: 0 }, '100%': { opacity: 1 } },
               fadeInDown: { '0%': { opacity: 0, transform: 'translateY(-20px)' }, '100%': { opacity: 1, transform: 'translateY(0)' } },
               fadeInUp: { '0%': { opacity: 0, transform: 'translateY(20px)' }, '100%': { opacity: 1, transform: 'translateY(0)' } },
               zoomIn: { '0%': { opacity: 0, transform: 'scale(0.95)' }, '100%': { opacity: 1, transform: 'scale(1)' } },
+              fadeOut: { '0%': { opacity: 1 }, '100%': { opacity: 0 } },
+              zoomOut: { '0%': { opacity: 1, transform: 'scale(1)' }, '100%': { opacity: 0, transform: 'scale(0.95)' } },
+              fadeOutUp: { '0%': { opacity: 1, transform: 'translateY(0)' }, '100%': { opacity: 0, transform: 'translateY(-20px)' } },
               kenburns: {
                 '0%': { transform: 'scale(1) translate(0, 0)', transformOrigin: 'center center' },
                 '100%': { transform: 'scale(1.1) translate(-2%, 2%)', transformOrigin: 'center center' },
@@ -95,7 +101,7 @@
   }
 }
 </script>
-  <script type="module" crossorigin src="/assets/index-1cm0rnTd.js"></script>
+  <script type="module" crossorigin src="/assets/index-DHK5cvRJ.js"></script>
 </head>
   <body>
     <div id="root"></div>
