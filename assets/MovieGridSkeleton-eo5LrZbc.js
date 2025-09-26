@@ -1,0 +1,1 @@
+import{j as r}from"./index-Dz2DXnM8.js";import{M as i}from"./MovieCardSkeleton-D_IMjcnN.js";const a=({count:o=12})=>r.jsx("div",{className:"grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-6",children:[...Array(o)].map((d,s)=>r.jsx(i,{},s))});export{a as M};
